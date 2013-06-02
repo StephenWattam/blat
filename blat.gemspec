@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.version     = '0.1.0a'
   s.date        = '2013-06-02'
   s.summary     = 'Aggressive parallel web request library'
-  s.description = 'A very parallel cURL wrapper for ongoing download tasks'
+  s.description = 'A very parallel cURL wrapper for high-performance or long-running download tasks'
   s.author      = 'Stephen Wattam'
   s.email       = 'stephenwattam@gmail.com'
   s.homepage    = 'http://stephenwattam.com/projects/blat'
