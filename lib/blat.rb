@@ -1,16 +1,11 @@
 
-require 'blat/pool'
 require 'blat/batch'
-require 'blat/formats'
+require 'blat/queue'
 
-# Blat is a hugely parallel wrapper for cURL designed to download data as
+# Blat is a simple wrapper for cURL::Multi designed to download data as
 # aggressively as possible.
-#
-# Blat makes use of many threads at once in a producer-consumer pattern, and
-# accepts tasks in the form of Blat::Jobs, which contain configuration and
-# results from each request.
 module Blat
 
-  VERSION = '0.1.0a'
+  VERSION = '0.1.0b'
 
 end

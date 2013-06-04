@@ -2,10 +2,10 @@
 Gem::Specification.new do |s|
   # About the gem
   s.name        = 'blat'
-  s.version     = '0.1.0a'
-  s.date        = '2013-06-02'
+  s.version     = '0.1.0b'
+  s.date        = '2013-06-04'
   s.summary     = 'Aggressive parallel web request library'
-  s.description = 'A very parallel cURL wrapper for high-performance or long-running download tasks'
+  s.description = 'Curl::Multi wrapper for high-performance and/or long-running download tasks'
   s.author      = 'Stephen Wattam'
   s.email       = 'stephenwattam@gmail.com'
   s.homepage    = 'http://stephenwattam.com/projects/blat'
