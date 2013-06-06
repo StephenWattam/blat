@@ -50,6 +50,13 @@ module Blat
       return curl
     end
 
+    # Cancel all requests
+    def cancel
+      @multi.cancel!
+    end
+
+    alias_method :cancel!, :cancel
+
     # Returns the number of active requests
     def request_count
       requests.length
