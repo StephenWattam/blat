@@ -2,7 +2,7 @@
 Gem::Specification.new do |s|
   # About the gem
   s.name        = 'blat'
-  s.version     = '0.1.0b'
+  s.version     = '0.1.0c'
   s.date        = '2013-06-04'
   s.summary     = 'Aggressive parallel web request library'
   s.description = 'Curl::Multi wrapper for high-performance and/or long-running download tasks'

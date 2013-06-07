@@ -6,6 +6,6 @@ require 'blat/queue'
 # aggressively as possible.
 module Blat
 
-  VERSION = '0.1.0b'
+  VERSION = '0.1.0c'
 
 end
