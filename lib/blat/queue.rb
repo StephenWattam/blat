@@ -27,6 +27,10 @@ module Blat
       @pipeline             = (pipeline == true)
       @multi.max_connects   = @max_connects
       @multi.pipeline       = @pipeline
+
+      # Keep track of activity
+      @active               = false
+      @activity_mx          = Mutex.new
     end
 
     # Add a URL or a Curl::Easy object to the queue.
@@ -50,7 +54,7 @@ module Blat
       return curl
     end
 
-    # Cancel all requests
+    # Cancel all requests currently queued or downloading
     def cancel
       @multi.cancel!
     end
@@ -62,7 +66,7 @@ module Blat
       requests.length
     end
 
-    # Returns a list of active requests
+    # Returns a list of active requests (Curl::Easy objects)
     def requests
       @multi.requests
     end
@@ -74,16 +78,43 @@ module Blat
       @multi.remove(curl)
     end
 
-    # Wait for all requests to finish (blocking).
+    # Run the queue, waiting for requests to finish (blocking).
     #
-    # If a block is given it is executed repeatedly whilst waiting.
-    def wait(&block)
+    # If a block is given it is executed repeatedly whilst waiting, e.g.
+    #
+    #  q.perform {
+    #    puts "Active downloads: #{q.request_count}"
+    #  }
+    #
+    def perform(&block)
+      raise 'Already actively performing requests' if active?
+
+      @activity_mx.synchronize { @active = true }
       @multi.perform do
         yield if block_given?
       end
+    ensure
+      @activity_mx.synchronize { @active = false }
     end
 
-    alias_method :perform, :wait
+    # Perform downloads in a nonblocking manner
+    #
+    # Optionally run the block given, as with regular #perform
+    def perform_nonblock(&block)
+      raise 'Currently active' if @thread
+
+        me = self
+        @thread = Thread.new() do
+          me.perform { yield if block_given? }
+        end
+        @thread.abort_on_exception = true
+
+    end
+
+    # Is this object currently actively downloading data?
+    def active?
+      @activity_mx.synchronize { @active }
+    end
 
     # Is the queue idle?
     def idle?
@@ -120,7 +151,7 @@ module Blat
     #  end
     #
     def consume(connections = @max_connects, &block)
-      @multi.perform do
+      perform do
         while request_count < connections && new_link = yield
           add(new_link) if new_link
         end
@@ -139,7 +170,7 @@ module Blat
       item = 0            # Start at item 0
       list = list.to_a    # Ensure we can address with []
 
-      @multi.perform do
+      perform do
         while request_count < connections && new_link = list[item]
 
           item += 1
